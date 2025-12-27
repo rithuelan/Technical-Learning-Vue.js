@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vue Composition API – CDN</title>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    button {
+      margin: 5px 0;
+    }
+    .active {
+      color: green;
+      font-weight: bold;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    hr {
+      margin: 25px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Declarative Rendering -->
+  <h1>{{ title }}</h1>
+  <p>Welcome, {{ name }}</p>
+
+  <hr>
+
+  <!-- v-bind -->
+  <img :src="logo" width="120" />
+
+  <hr>
+
+  <!-- v-on -->
+  <button @click="count++">Clicked {{ count }} times</button>
+
+  <hr>
+
+  <!-- v-model -->
+  <input v-model="message" placeholder="Type something" />
+  <p>You typed: {{ message }}</p>
+
+  <hr>
+
+  <!-- v-if / v-show -->
+  <button @click="show = !show">Toggle</button>
+  <p v-if="show">Shown using v-if</p>
+  <p v-show="show">Shown using v-show</p>
+
+  <hr>
+
+  <!-- v-for -->
+  <ul>
+    <li v-for="(skill, index) in skills" :key="index">
+      {{ skill }}
+    </li>
+  </ul>
+
+  <hr>
+
+  <!-- reactive object -->
+  <p>User: {{ user.name }} ({{ user.role }})</p>
+  <button @click="user.role = 'Vue Developer'">Promote</button>
+
+  <hr>
+
+  <!-- Computed -->
+  <p>Price: {{ price }}</p>
+  <p>Quantity: {{ quantity }}</p>
+  <p><strong>Total (computed): {{ total }}</strong></p>
+
+  <hr>
+
+  <!-- Watcher -->
+  <button @click="userId++">Change User ID</button>
+  <p>API User Name: {{ apiUser?.name }}</p>
+
+</div>
+
+<script>
+const { createApp, ref, reactive, computed, watch } = Vue
+
+createApp({
+  setup() {
+    /* -------------------------
+       ref() – primitives
+    -------------------------- */
+    const title = ref("Vue Composition API – CDN")
+    const name = ref("Rithiha")
+    const count = ref(0)
+    const message = ref("")
+    const show = ref(true)
+
+    /* -------------------------
+       v-bind example
+    -------------------------- */
+    const logo = ref("https://vuejs.org/images/logo.png")
+
+    /* -------------------------
+       reactive() – objects/arrays
+    -------------------------- */
+    const skills = reactive(["JavaScript", "Vue", "Composition API"])
+    const user = reactive({
+      name: "Rithiha",
+      role: "Frontend Developer"
+    })
+
+    /* -------------------------
+       Computed property
+    -------------------------- */
+    const price = ref(100)
+    const quantity = ref(2)
+
+    const total = computed(() => {
+      return price.value * quantity.value
+    })
+
+    /* -------------------------
+       Watcher (side effects)
+    -------------------------- */
+    const userId = ref(1)
+    const apiUser = ref(null)
+
+    watch(userId, async (newId) => {
+      const res = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${newId}`
+      )
+      apiUser.value = await res.json()
+    }, { immediate: true })
+
+    /* -------------------------
+       Expose to template
+    -------------------------- */
+    return {
+      title,
+      name,
+      logo,
+      count,
+      message,
+      show,
+      skills,
+      user,
+      price,
+      quantity,
+      total,
+      userId,
+      apiUser
+    }
+  }
+}).mount("#app")
+</script>
+
+</body>
+</html>

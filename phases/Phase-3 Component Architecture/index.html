@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Component Architecture – CDN</title>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    button {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <h1>Vue Component Architecture</h1>
+
+  <!-- Parent → Child via Props -->
+  <employee-card
+    :name="employee.name"
+    :role="employee.role"
+    @promote="promoteEmployee"
+  >
+    <!-- Slot content -->
+    <template #default>
+      <p><strong>Slot Content:</strong> This HTML comes from Parent</p>
+    </template>
+  </employee-card>
+
+  <p><strong>Parent State:</strong> {{ employee }}</p>
+
+  <button @click="show = !show">
+    Toggle Component (Lifecycle)
+  </button>
+
+  <!-- Lifecycle demo -->
+  <lifecycle-demo v-if="show" />
+</div>
+
+<script>
+const {
+  createApp,
+  ref,
+  reactive,
+  onMounted,
+  onUnmounted
+} = Vue
+
+/* -----------------------------------
+   Child Component – EmployeeCard
+------------------------------------ */
+const EmployeeCard = {
+  template: `
+    <div class="card">
+      <h2>{{ name }}</h2>
+      <p>Role: {{ role }}</p>
+
+      <!-- Slot -->
+      <slot></slot>
+
+      <!-- Emit event -->
+      <button @click="emitPromote">
+        Promote Employee
+      </button>
+    </div>
+  `,
+  props: {
+    name: String,
+    role: String
+  },
+  emits: ["promote"],
+  setup(props, { emit }) {
+    const emitPromote = () => {
+      emit("promote")
+    }
+
+    return { emitPromote }
+  }
+}
+
+/* -----------------------------------
+   Lifecycle Demo Component
+------------------------------------ */
+const LifecycleDemo = {
+  template: `
+    <div class="card">
+      <h3>Lifecycle Component</h3>
+      <p>Check console for lifecycle logs</p>
+    </div>
+  `,
+  setup() {
+    onMounted(() => {
+      console.log("Component mounted ✅")
+    })
+
+    onUnmounted(() => {
+      console.log("Component unmounted ❌")
+    })
+  }
+}
+
+/* -----------------------------------
+   Root App (Parent)
+------------------------------------ */
+createApp({
+  components: {
+    EmployeeCard,
+    LifecycleDemo
+  },
+  setup() {
+    const employee = reactive({
+      name: "Rithiha",
+      role: "Junior Developer"
+    })
+
+    const show = ref(true)
+
+    const promoteEmployee = () => {
+      employee.role = "Senior Vue Developer"
+    }
+
+    return {
+      employee,
+      promoteEmployee,
+      show
+    }
+  }
+}).mount("#app")
+</script>
+
+</body>
+</html>

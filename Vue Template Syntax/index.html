@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vue Template Syntax – CDN</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    hr {
+      margin: 25px 0;
+    }
+    .active {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- 1️ Text Interpolation -->
+  <h1>{{ title }}</h1>
+  <p>Welcome, {{ name }}</p>
+  <hr>
+
+  <!-- 2️ Attribute Binding -->
+  <img :src="imageUrl" :alt="altText" width="120" />
+  <hr>
+
+  <!-- 3️ Event Handling -->
+  <button @click="increase">Count: {{ count }}</button>
+  <hr>
+
+  <!-- 4️ v-model -->
+  <input v-model="message" placeholder="Type something" />
+  <p>You typed: {{ message }}</p>
+  <hr>
+
+  <!-- 5️ Conditional Rendering -->
+  <button @click="show = !show">Toggle</button>
+  <p v-if="show">Now you see me </p>
+  <p v-else>Now you don't </p>
+  <hr>
+
+  <!-- 6️ List Rendering -->
+  <ul>
+    <li v-for="(item, index) in items" :key="index">
+      {{ index + 1 }} - {{ item }}
+    </li>
+  </ul>
+  <hr>
+
+  <!-- 7️ Class Binding -->
+  <p :class="{ active: isActive }">Dynamic Class</p>
+  <button @click="isActive = !isActive">Toggle Class</button>
+  <hr>
+
+  <!-- 8️ Inline Expression -->
+  <p>Price × Quantity = {{ price * quantity }}</p>
+  <hr>
+
+  <!-- 9️ Computed Property -->
+  <p>Total (Computed): {{ total }}</p>
+  <hr>
+
+  <!-- 10 v-show -->
+  <button @click="visible = !visible">Toggle Visibility</button>
+  <p v-show="visible">I use CSS display</p>
+
+</div>
+
+<script>
+const { createApp } = Vue
+
+createApp({
+  data() {
+    return {
+      // 1️
+      title: "Vue Template Syntax (CDN)",
+      name: "Rithiha",
+
+      // 2️
+      imageUrl: "https://vuejs.org/images/logo.png",
+      altText: "Vue Logo",
+
+      // 3️
+      count: 0,
+
+      // 4️
+      message: "",
+
+      // 5️
+      show: true,
+
+      // 6️
+      items: ["Vue", "React", "Angular"],
+
+      //  7️  
+      isActive: true,
+
+      // 8
+      price: 100,
+      quantity: 3,
+
+      // 9️
+      visible: true
+    }
+  },
+  methods: {
+    increase() {
+      this.count++
+    }
+  },
+  computed: {
+    total() {
+      return this.price * this.quantity
+    }
+  }
+}).mount("#app")
+</script>
+
+</body>
+</html>
